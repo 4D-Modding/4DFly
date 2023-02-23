@@ -3,7 +3,7 @@
 //#define DEBUG_CONSOLE
 
 #define MOD_NAME "4DFly"
-#define MOD_VER "0.6"
+#define MOD_VER "0.7"
 
 #include <Windows.h>
 #include <cstdio>
@@ -52,11 +52,11 @@ DWORD WINAPI Main_Thread(void* hModule)
 #endif
 
 	// Hook to the Player::update function
-	MH_CreateHook(reinterpret_cast<void*>(base + idaOffsetFix(0x7EB40)), reinterpret_cast<void*>(&Player_update_H), reinterpret_cast<void**>(&Player_update));
+	Hook(reinterpret_cast<void*>(base + idaOffsetFix(0x7EB40)), reinterpret_cast<void*>(&Player_update_H), reinterpret_cast<void**>(&Player_update));
 	// Hook to the Player::keyInput function to add F button
-	MH_CreateHook(reinterpret_cast<void*>(base + idaOffsetFix(0x81880)), reinterpret_cast<void*>(&Player_keyInput_H), reinterpret_cast<void**>(&Player_keyInput));
+	Hook(reinterpret_cast<void*>(base + idaOffsetFix(0x81880)), reinterpret_cast<void*>(&Player_keyInput_H), reinterpret_cast<void**>(&Player_keyInput));
 
-	MH_EnableHook(MH_ALL_HOOKS);
+	EnableHook(0);
 	return true;
 }
 

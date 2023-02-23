@@ -46,13 +46,15 @@
 #define MBO(t, c, off) *reinterpret_cast<t*>(reinterpret_cast<uintptr_t>(c) + off) // member by offset
 #endif
 
+#include "hook.h"
+
 namespace fdm
 {
 	const char* modName = "";
 	const char* modVer = "";
 	inline uintptr_t base = reinterpret_cast<uintptr_t>(GetModuleHandle(0));
 }
-#include "MinHook.h"
+
 #include "path.h"
 #include "m4.h"
 #include "Mesh.h"
