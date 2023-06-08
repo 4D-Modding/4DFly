@@ -5,6 +5,9 @@
 #include "World.h"
 #include "Player.h"
 #include "Entity.h"
+#include "FontRenderer.h"
+#include "QuadRenderer.h"
+
 namespace fdm
 {
 	class FontRenderer;
@@ -15,110 +18,114 @@ namespace fdm
 	
 	class Item
 	{
-	private:
-		static nlohmann::json blueprints;
 	public:
-		static FontRenderer fr;
-		static QuadRenderer qr;
+		//inline static FontRenderer fr;
+		//inline static QuadRenderer qr;
+
+		inline static FontRenderer getFontRenderer() // fr
+		{
+			return *reinterpret_cast<FontRenderer*>((base + 0x17BF80));
+		}
+
+		inline static QuadRenderer getQuadRenderer() // qr
+		{
+			return *reinterpret_cast<QuadRenderer*>((base + 0x17BAA8));
+		}
 		
 		unsigned int count;
-		static nlohmann::json getBlueprints()
+
+		inline static nlohmann::json getBlueprints() // blueprints
 		{
-			Item::blueprints = *reinterpret_cast<nlohmann::json*>((base + idaOffsetFix(0x1327B0)));
-			return blueprints;
+			return *reinterpret_cast<nlohmann::json*>((base + 0x1BED98));
 		}
+
 		bool loadItemInfo(void) 
 		{
 			return reinterpret_cast<bool(__thiscall*)(Item*)>(
-				base + idaOffsetFix(0x67A00)
+				FUNC_ITEM_LOADITEMINFO
 				)(this);
 		}
 		void renderInit(void) 
 		{
 			return reinterpret_cast<void(__thiscall*)(Item*)>(
-				base + idaOffsetFix(0x68090)
+				FUNC_ITEM_RENDERINIT
 				)(this);
 		}
 		nlohmann::json save(void) 
 		{
-			nlohmann::json* result = new nlohmann::json();
 			return reinterpret_cast<nlohmann::json(__thiscall*)(Item*, nlohmann::json*)>(
-				base + idaOffsetFix(0x6A300)
-				)(this, result);
+				FUNC_ITEM_SAVE
+				)(this, nullptr);
 		}
 		bool takeHalf(std::unique_ptr<Item>& other) 
 		{
 			return reinterpret_cast<nlohmann::json(__thiscall*)(Item*, std::unique_ptr<Item>&)>(
-				base + idaOffsetFix(0x6A500)
+				FUNC_ITEM_TAKEHALF
 				)(this, other);
 		}
 
-		// static funcs fr
-		static void renderItem(std::unique_ptr<Item>& item, const glm::ivec2& pos)
+		// inline static funcs fr
+		inline static void renderItem(std::unique_ptr<Item>& item, const glm::ivec2& pos)
 		{
 			return reinterpret_cast<void(__fastcall*)(std::unique_ptr<Item>&, const glm::ivec2&)>(
-				base + idaOffsetFix(0x683B0)
+				FUNC_ITEM_RENDERITEM
 				)(item, pos);
 		}
-		static void renderItemDescription(std::unique_ptr<Item>& item, const glm::ivec2& pos)
+		inline static void renderItemDescription(std::unique_ptr<Item>& item, const glm::ivec2& pos)
 		{
 			return reinterpret_cast<void(__fastcall*)(std::unique_ptr<Item>&, const glm::ivec2&)>(
-				base + idaOffsetFix(0x68540)
+				FUNC_ITEM_RENDERITEMDESCRIPTION
 				)(item, pos);
 		}
-		static std::unique_ptr<Item> createFromJson(const nlohmann::json& j)
+		inline static std::unique_ptr<Item> createFromJson(const nlohmann::json& j)
 		{
 			return reinterpret_cast<std::unique_ptr<Item>(__fastcall*)(std::unique_ptr<Item>*, const nlohmann::json&)>(
-				base + idaOffsetFix(0x68A80)
+				FUNC_ITEM_CREATEFROMJSON
 				)(nullptr, j);
 		}
-		static std::unique_ptr<Item> create(const std::string& itemName, unsigned int count)
+		inline static std::unique_ptr<Item> create(const std::string& itemName, unsigned int count)
 		{
 			return reinterpret_cast<std::unique_ptr<Item>(__fastcall*)(std::unique_ptr<Item>*, const std::string&, unsigned int)>(
-				base + idaOffsetFix(0x69710)
+				FUNC_ITEM_CREATE
 				)(nullptr, itemName, count);
 		}
-		static bool giveMax(std::unique_ptr<Item>& from, std::unique_ptr<Item>& to)
+		inline static bool giveMax(std::unique_ptr<Item>& from, std::unique_ptr<Item>& to)
 		{
 			return reinterpret_cast<bool(__fastcall*)(std::unique_ptr<Item>&, std::unique_ptr<Item>&)>(
-				base + idaOffsetFix(0x69BD0)
+				FUNC_ITEM_GIVEMAX
 				)(from, to);
 		}
-		static bool giveOne(std::unique_ptr<Item>& from, std::unique_ptr<Item>& to)
+		inline static bool giveOne(std::unique_ptr<Item>& from, std::unique_ptr<Item>& to)
 		{
 			return reinterpret_cast<bool(__fastcall*)(std::unique_ptr<Item>&, std::unique_ptr<Item>&)>(
-				base + idaOffsetFix(0x69D90)
+				FUNC_ITEM_GIVEONE
 				)(from, to);
 		}
-		static std::unique_ptr<Item> instantiateItem(const std::string& itemName, unsigned int count, const std::string& type, const nlohmann::json& attributes)
+		inline static std::unique_ptr<Item> instantiateItem(const std::string& itemName, unsigned int count, const std::string& type, const nlohmann::json& attributes)
 		{
-			std::unique_ptr<Item>* result = new std::unique_ptr<Item>();
 			return reinterpret_cast<std::unique_ptr<Item>(__fastcall*)(std::unique_ptr<Item>*, const std::string&, unsigned int, const std::string&, const nlohmann::json&)>(
-				base + idaOffsetFix(0x69F00)
-				)(result, itemName, count, type, attributes);
+				FUNC_ITEM_INSTANTIATEITEM
+				)(nullptr, itemName, count, type, attributes);
 		}
-		static nlohmann::json combineItemAttributes(const nlohmann::json& baseAttributes, const nlohmann::json& additions)
+		inline static nlohmann::json combineItemAttributes(const nlohmann::json& baseAttributes, const nlohmann::json& additions)
 		{
-			nlohmann::json* result = new nlohmann::json();
 			return reinterpret_cast<nlohmann::json(__fastcall*)(nlohmann::json*, const nlohmann::json&, const nlohmann::json&)>(
-				base + idaOffsetFix(0x6A050)
-				)(result, baseAttributes, additions);
+				FUNC_ITEM_COMBINEITEMATTRIBUTES
+				)(nullptr, baseAttributes, additions);
 		}
 
 		// abstract/virtual funcs
-		virtual std::string getName() {}
+		virtual std::string getName() { return ""; }
 		virtual void render(const glm::ivec2& pos) {}
 		virtual void renderEntity(const m4::Mat5& mat, bool inHand) {}
-		virtual bool isDeadly() {}
-		virtual bool isCompatible(const std::unique_ptr<Item>& other) {}
-		virtual unsigned int getStackLimit() {}
-		virtual bool action(World* world, Player* player, int action) {}
-		virtual bool breakBlock(World* world, Player* player, unsigned char block, const glm::ivec4& blockPos) {}
-		virtual bool entityAction(World* world, Player* player, std::unique_ptr<Entity>& entity, int action) {}
+		virtual bool isDeadly() { return false; }
+		virtual bool isCompatible(const std::unique_ptr<Item>& other) { return false; }
+		virtual unsigned int getStackLimit() { return 4096; }
+		virtual bool action(World* world, Player* player, int action) { return false; }
+		virtual bool breakBlock(World* world, Player* player, unsigned char block, const glm::ivec4& blockPos) { return false; }
+		virtual bool entityAction(World* world, Player* player, std::unique_ptr<Entity>& entity, int action) { return false; }
 		virtual std::unique_ptr<Item> clone() { return NULL; }
-		nlohmann::json saveAttributes() { return NULL; }
+		virtual nlohmann::json saveAttributes() { return NULL; }
 	};
-	nlohmann::json Item::blueprints{};
-
 }
 #endif

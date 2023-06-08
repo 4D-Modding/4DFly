@@ -13,8 +13,6 @@ namespace fdm
 	
 	class CraftingMenu : public gui::Element
 	{
-	private:
-		static nlohmann::json recipes;
 	public:
 		struct CraftableRecipe
 		{
@@ -27,11 +25,11 @@ namespace fdm
 			~CraftableRecipe()
 			{
 				reinterpret_cast<void(__thiscall*)(CraftableRecipe*)>(
-					base + idaOffsetFix(0x3D790)
+					FUNC_CRAFTINGMENU_CRAFTABLERECIPE_DCRAFTABLERECIPE
 					)(this);
 			}
 		};
-		static TexRenderer tr;
+		
 		InventoryGUI* intrface;
 		InventoryCursor* cursor;
 		std::vector<CraftableRecipe> craftableRecipes;
@@ -39,27 +37,30 @@ namespace fdm
 		int yOffset;
 		gui::AlignmentX xAlign;
 		gui::AlignmentY yAlign;
-		static nlohmann::json getRecipes()
+		inline static nlohmann::json getRecipes() // recipes
 		{
-			CraftingMenu::recipes = *reinterpret_cast<nlohmann::json*>((base + idaOffsetFix(0x1BDE68)));
-			return recipes;
+			return *(reinterpret_cast<nlohmann::json*>((base + 0x1BDD68)));
 		}
-		static bool loadRecipes() 
+		inline static TexRenderer getTexRenderer() // tr
+		{
+			return *(reinterpret_cast<TexRenderer*>((base + 0x1BDD78)));
+		}
+		inline static bool loadRecipes() 
 		{
 			return reinterpret_cast<bool(__fastcall*)()>(
-				base + idaOffsetFix(0x3B650)
+				FUNC_CRAFTINGMENU_LOADRECIPES
 				)();
 		}
-		static void renderInit() 
+		inline static void renderInit() 
 		{
 			reinterpret_cast<void(__fastcall*)()>(
-				base + idaOffsetFix(0x3B960)
+				FUNC_CRAFTINGMENU_RENDERINIT
 				)();
 		}
 		void render(gui::Window* w) override
 		{
 			reinterpret_cast<void(__thiscall*)(CraftingMenu*, gui::Window*)>(
-				base + idaOffsetFix(0x3BAE0)
+				FUNC_CRAFTINGMENU_RENDER
 				)(this, w);
 		}
 		void offsetX(int offset) override 
@@ -81,28 +82,27 @@ namespace fdm
 		void getPos(const gui::Window* w, int* x, int* y) override
 		{
 			reinterpret_cast<void(__thiscall*)(CraftingMenu*, const gui::Window*, int*, int*)>(
-				base + idaOffsetFix(0x3BFA0)
+				FUNC_CRAFTINGMENU_GETPOS
 				)(this, w, x, y);
 		}
 		void getSize(const gui::Window* w, int* width, int* height) override
 		{
 			reinterpret_cast<void(__thiscall*)(CraftingMenu*, const gui::Window*, int*, int*)>(
-				base + idaOffsetFix(0x3C080)
+				FUNC_CRAFTINGMENU_GETSIZE
 				)(this, w, width, height);
 		}
 		bool mouseButtonInput(const gui::Window* w, int button, int action, int) override 
 		{
 			return reinterpret_cast<bool(__thiscall*)(CraftingMenu*, const gui::Window*, int, int)>(
-				base + idaOffsetFix(0x3C120)
+				FUNC_CRAFTINGMENU_MOUSEBUTTONINPUT
 				)(this, w, button, action);
 		}
 		void updateAvailableRecipes() 
 		{
 			reinterpret_cast<void(__thiscall*)(CraftingMenu*)>(
-				base + idaOffsetFix(0x3CC20)
+				FUNC_CRAFTINGMENU_UPDATEAVAILABLERECIPES
 				)(this);
 		}
 	};
-	nlohmann::json CraftingMenu::recipes{};
 }
 #endif

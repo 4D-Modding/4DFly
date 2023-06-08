@@ -1,16 +1,17 @@
-/* 
- * that was kinda helpful for RE rendering : https://javagl.github.io/GLConstantsTranslator/GLConstantsTranslator.html 
+/*
+ * that was kinda helpful for RE rendering : https://javagl.github.io/GLConstantsTranslator/GLConstantsTranslator.html
  * and some other stuff
 */
-
 #ifndef __4DM_H__
 #define __4DM_H__
+
 #ifndef MOD_NAME
 #define MOD_NAME "Unknown Mod"
 #endif
 #ifndef MOD_VER
 #define MOD_VER "0.0"
 #endif
+
 #include <algorithm>
 #include <map>
 #include <unordered_map>
@@ -50,10 +51,12 @@
 
 namespace fdm
 {
-	const char* modName = "";
-	const char* modVer = "";
+	//const char* modName = "";
+	//const char* modVer = "";
 	inline uintptr_t base = reinterpret_cast<uintptr_t>(GetModuleHandle(0));
 }
+
+#include "addresses.h"
 
 #include "path.h"
 #include "m4.h"
@@ -88,11 +91,12 @@ namespace fdm
 #include "States/State.h"
 #include "States/GameState.h"
 #include "States/TitleState.h"
+#include "States/CreateWorldState.h"
 
-extern "C" __declspec(dllexport) const char* getModName() { if (fdm::modName == "") fdm::modName = MOD_NAME; return fdm::modName; }
-extern "C" __declspec(dllexport) const char* getModVer() { if (fdm::modVer == "") fdm::modVer = MOD_VER; return fdm::modVer; }
+extern "C" inline __declspec(dllexport) const char* getModName() { return MOD_NAME; }
+extern "C" inline __declspec(dllexport) const char* getModVer() { return MOD_VER; }
 
-extern "C" __declspec(dllexport) void setModName(const char* newName) { fdm::modName = newName; }
-extern "C" __declspec(dllexport) void setModVer(const char* newVer) { fdm::modVer = newVer; }
+//extern "C" __declspec(dllexport) void setModName(const char* newName) { fdm::modName = newName; }
+//extern "C" __declspec(dllexport) void setModVer(const char* newVer) { fdm::modVer = newVer; }
 
 #endif

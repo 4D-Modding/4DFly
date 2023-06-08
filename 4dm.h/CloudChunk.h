@@ -18,32 +18,32 @@ namespace fdm
 			int vertCount() override 
 			{
 				return reinterpret_cast<int(__thiscall*)(CloudChunkMesh*)>(
-					base + idaOffsetFix(0x2C250)
+					FUNC_CLOUDCHUNK_CLOUDCHUNKMESH_VERTCOUNT
 					)(this);
 			}
 			int indexBuffSize() override
 			{
 				return reinterpret_cast<int(__thiscall*)(CloudChunkMesh*)>(
-					base + idaOffsetFix(0x2C270)
+					FUNC_CLOUDCHUNK_CLOUDCHUNKMESH_INDEXBUFFSIZE
 					)(this);
 			}
 			int buffSize(int buffIndex) override
 			{
 				return reinterpret_cast<int(__thiscall*)(CloudChunkMesh*, int)>(
-					base + idaOffsetFix(0x2FD40)
+					FUNC_CLOUDCHUNK_CLOUDCHUNKMESH_BUFFSIZE
 					)(this, buffIndex);
 			}
 			int attrStride(int buffIndex, int attrIndex) override
 			{
 				return reinterpret_cast<int(__thiscall*)(CloudChunkMesh*, int, int)>(
-					base + idaOffsetFix(0x2FD50)
+					FUNC_CLOUDCHUNK_CLOUDCHUNKMESH_ATTRSTRIDE
 					)(this, buffIndex, attrIndex);
 			}
 		};
-		static const unsigned char SIZE;
-		static const unsigned char SCALE;
+		inline static const unsigned char SIZE = 6; // ig? not sure
+		inline static const unsigned char SCALE = 1; // idk???
 
-		unsigned char blocks[6][6][6];
+		unsigned char blocks[SIZE * SCALE][SIZE * SCALE][SIZE * SCALE];
 
 		std::mutex meshMutex;
 		CloudChunk::CloudChunkMesh activeMesh;
@@ -56,7 +56,7 @@ namespace fdm
 		void generateMesh() 
 		{
 			reinterpret_cast<void(__thiscall*)(CloudChunk*)>(
-				base + idaOffsetFix(0x2FD60)
+				FUNC_CLOUDCHUNK_GENERATEMESH
 				)(this);
 		}
 	};

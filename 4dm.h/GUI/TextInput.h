@@ -14,9 +14,9 @@ namespace fdm
 		class TextInput : public Element
 		{
 		public:
-			static const int maxScrollPos;
-			static const float cursorBlinkTime;
-			static const float lastTypedCharTime;
+			inline static const int maxScrollPos = 4; // idk??
+			inline static const float cursorBlinkTime = 1.f; // idk??
+			inline static const float lastTypedCharTime = 1.f; // idk??
 			std::string text = "";
 			bool enabled = true;
 			bool mouseDown = false;
@@ -44,7 +44,7 @@ namespace fdm
 			void render(gui::Window* w) override
 			{
 				reinterpret_cast<void(__thiscall*)(TextInput*, gui::Window*)>(
-					base + idaOffsetFix(0x586E0)
+					FUNC_GUI_TEXTINPUT_RENDER
 					)(this, w);
 			}
 			void alignX(AlignmentX a) override
@@ -55,10 +55,6 @@ namespace fdm
 			{
 				this->yAlign = a;
 			}
-			void offsetX(int offset) override
-			{
-				this->xOffset = offset;
-			}
 			void offsetY(int offset) override
 			{
 				this->yOffset = offset;
@@ -66,25 +62,25 @@ namespace fdm
 			bool mouseButtonInput(const gui::Window* w, int button, int action, int mods) override
 			{
 				return reinterpret_cast<bool(__thiscall*)(TextInput*, const gui::Window*, int, int, int)>(
-					base + idaOffsetFix(0x59240)
+					FUNC_GUI_TEXTINPUT_MOUSEBUTTONINPUT
 					)(this, w, button, action, mods);
 			}
 			void mouseInput(const gui::Window* w, double xPos, double yPos) override
 			{
 				reinterpret_cast<void(__thiscall*)(TextInput*, const gui::Window*, double, double)>(
-					base + idaOffsetFix(0x593A0)
+					FUNC_GUI_TEXTINPUT_MOUSEINPUT
 					)(this, w, xPos, yPos);
 			}
 			bool keyInput(const gui::Window* w, int key, int scancode, int action, int mods) override
 			{
 				return reinterpret_cast<bool(__thiscall*)(TextInput*, const gui::Window*, int, int, int, int)>(
-					base + idaOffsetFix(0x59460)
+					FUNC_GUI_TEXTINPUT_KEYINPUT
 					)(this, w, key, scancode, action, mods);
 			}
 			bool charInput(const gui::Window* w, unsigned int codepoint) override
 			{
 				return reinterpret_cast<bool(__thiscall*)(TextInput*, const gui::Window*, unsigned int)>(
-					base + idaOffsetFix(0x59B50)
+					FUNC_GUI_TEXTINPUT_CHARINPUT
 					)(this, w, codepoint);
 			}
 			void deselect() override 
@@ -95,31 +91,32 @@ namespace fdm
 			void updateScrollPos(const gui::Window* w)
 			{
 				reinterpret_cast<void(__thiscall*)(TextInput*, const gui::Window*)>(
-					base + idaOffsetFix(0x59C60)
+					FUNC_GUI_TEXTINPUT_UPDATESCROLLPOS
 					)(this, w);
 			}
 			void getPos(const gui::Window* w, int* x, int* y) override
 			{
 				reinterpret_cast<void(__thiscall*)(TextInput*, const gui::Window*, int*, int*)>(
-					base + idaOffsetFix(0x59CE0)
+					FUNC_GUI_TEXTINPUT_GETPOS
 					)(this, w, x, y);
 			}
 			void getSize(const gui::Window* w, int* width, int* height) override
 			{
 				reinterpret_cast<void(__thiscall*)(TextInput*, const gui::Window*, int*, int*)>(
-					base + idaOffsetFix(0x59DA0)
+					FUNC_GUI_TEXTINPUT_GETSIZE
 					)(this, w, width, height);
 			}
 			void removedHighlightedText() 
 			{
 				reinterpret_cast<void(__thiscall*)(TextInput*)>(
-					base + idaOffsetFix(0x59DB0)
+					FUNC_GUI_TEXTINPUT_REMOVEHIGHLIGHTEDTEXT
 					)(this);
 			}
+			void offsetX(int offset) override
+			{
+				this->xOffset = offset;
+			}
 		};
-		const int TextInput::maxScrollPos = 4;
-		const float TextInput::cursorBlinkTime = 1;
-		const float TextInput::lastTypedCharTime = 1;
 	}
 }
 #endif
