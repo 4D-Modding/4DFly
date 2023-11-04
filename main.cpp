@@ -3,7 +3,7 @@
 //#define DEBUG_CONSOLE
 
 #define MOD_NAME "4DFly"
-#define MOD_VER "0.8"
+#define MOD_VER "1.0"
 
 #include <Windows.h>
 #include <cstdio>
@@ -17,30 +17,40 @@ using namespace fdm;
 bool flyEnabled = false;
 float yVel = 0.0f;
 
-void(__thiscall* Player_update)(Player* self, GLFWwindow* window, World* world, double dt);
-void __fastcall Player_update_H(Player* self, GLFWwindow* window, World* world, double dt) 
+void(__thiscall* Player_updatePos)(Player* self, World* world, double dt);
+void __fastcall Player_updatePos_H(Player* self, World* world, double dt)
 {
 	if (flyEnabled)
 	{
 		// Fly UP if SPACE is pressed and fly DOWN in SHIFT is pressed
-		if (self->keys.space && !self->keys.shift) yVel = lerpF(yVel, (self->keys.ctrl ? 15.0f : 12.0f), 10.0f * dt);
-		else if (self->keys.shift && !self->keys.space) yVel = lerpF(yVel, (self->keys.ctrl ? -15.0f : -12.0f), 10.0f * dt);
+		if (self->keys.space && !self->keys.shift) yVel = lerpF(yVel, (self->keys.ctrl ? 25.0f : 18.0f), 10.0f * dt);
+		else if (self->keys.shift && !self->keys.space && !self->touchingGround) yVel = lerpF(yVel, (self->keys.ctrl ? -25.0f : -18.0f), 10.0f * dt);
 		else yVel = lerpF(yVel, 0.0f, 10.0f * dt);
 
+		if (yVel <= 0.01f && yVel >= -0.01f)
+			yVel = 0.f;
+
 		// Change velocity of player
-		self->deltaVel = glm::vec4{ 0.0f };
 		self->vel = glm::vec4{ self->vel.x, yVel, self->vel.z, self->vel.w };
 	}
 	else yVel = self->vel.y;
-	Player_update(self, window, world, dt);
+
+	const float d = self->pos.y + self->vel.y * (float)dt;
+
+	Player_updatePos(self, world, dt);
+
+	// this anti-gravity shit i made is dumb but it works and i dont give a shit :troll:
+	if (flyEnabled && !(self->keys.space || self->keys.shift) && (yVel <= 0.01f && yVel >= -0.01f))
+		self->pos.y -= self->pos.y - d;
 }
-bool(__thiscall* Player_keyInput)(Player* self, GLFWwindow* window, int key, int scancode, int action, int mods);
-bool __fastcall Player_keyInput_H(Player* self, GLFWwindow* window, int key, int scancode, int action, int mods) 
+bool(__thiscall* Player_keyInput)(Player* self, GLFWwindow* window, World* world, int key, int scancode, int action, int mods);
+bool __fastcall Player_keyInput_H(Player* self, GLFWwindow* window, World* world, int key, int scancode, int action, int mods) 
 {
 	// Switch `flyEnabled` when F press
 	if (key == GLFW_KEY_F && action == GLFW_PRESS)
 		flyEnabled = !flyEnabled;
-	return Player_keyInput(self, window, key, scancode, action, mods);
+
+	return Player_keyInput(self, window, world, key, scancode, action, mods);
 }
 DWORD WINAPI Main_Thread(void* hModule)
 {
@@ -52,7 +62,7 @@ DWORD WINAPI Main_Thread(void* hModule)
 #endif
 
 	// Hook to the Player::update function
-	Hook(reinterpret_cast<void*>(FUNC_PLAYER_UPDATE), reinterpret_cast<void*>(&Player_update_H), reinterpret_cast<void**>(&Player_update));
+	Hook(reinterpret_cast<void*>(FUNC_PLAYER_UPDATEPOS), reinterpret_cast<void*>(&Player_updatePos_H), reinterpret_cast<void**>(&Player_updatePos));
 	// Hook to the Player::keyInput function to add F button
 	Hook(reinterpret_cast<void*>(FUNC_PLAYER_KEYINPUT), reinterpret_cast<void*>(&Player_keyInput_H), reinterpret_cast<void**>(&Player_keyInput));
 
