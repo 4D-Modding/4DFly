@@ -3,7 +3,7 @@
 //#define DEBUG_CONSOLE
 
 #define MOD_NAME "4DFly"
-#define MOD_VER "1.0"
+#define MOD_VER "1.05"
 
 #include <Windows.h>
 #include <cstdio>
