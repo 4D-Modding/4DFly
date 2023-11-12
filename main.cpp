@@ -25,8 +25,8 @@ void __fastcall Player_updatePos_H(Player* self, World* world, double dt)
 	if (flyEnabled)
 	{
 		// Fly UP if SPACE is pressed and fly DOWN in SHIFT is pressed
-		if (self->keys.space && !self->keys.shift) yVel = lerpF(yVel, (self->keys.ctrl ? 25.0f : 18.0f), 10.0f * dt);
-		else if (self->keys.shift && !self->keys.space && !self->touchingGround) yVel = lerpF(yVel, (self->keys.ctrl ? -25.0f : -18.0f), 10.0f * dt);
+		if (self->keys.space && !self->keys.shift) yVel = lerpF(yVel, (self->keys.ctrl ? 20.0f : 15.0f), 10.0f * dt);
+		else if (self->keys.shift && !self->keys.space && !self->touchingGround) yVel = lerpF(yVel, (self->keys.ctrl ? -20.0f : -15.0f), 10.0f * dt);
 		else yVel = lerpF(yVel, 0.0f, 10.0f * dt);
 
 		if (yVel <= 0.01f && yVel >= -0.01f)
