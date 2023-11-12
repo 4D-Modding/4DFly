@@ -10,6 +10,8 @@
 #include <4dm.h>
 using namespace fdm;
 
+#include "4DKeyBinds.h"
+
 // lerp definition ig
 #define lerpF(a, b, ratio) (a * (1.f - ratio) + b * ratio)
 
@@ -46,12 +48,22 @@ void __fastcall Player_updatePos_H(Player* self, World* world, double dt)
 bool(__thiscall* Player_keyInput)(Player* self, GLFWwindow* window, World* world, int key, int scancode, int action, int mods);
 bool __fastcall Player_keyInput_H(Player* self, GLFWwindow* window, World* world, int key, int scancode, int action, int mods) 
 {
-	// Switch `flyEnabled` when F press
-	if (key == GLFW_KEY_F && action == GLFW_PRESS)
-		flyEnabled = !flyEnabled;
-
+	if(!KeyBinds::IsLoaded()) // if no 4DKeyBinds mod
+	{
+		// Switch `flyEnabled` when F press
+		if (key == GLFW_KEY_F && action == GLFW_PRESS)
+			flyEnabled = !flyEnabled;
+	}
+	
 	return Player_keyInput(self, window, world, key, scancode, action, mods);
 }
+
+void toggleFlyCallback(GLFWwindow* window, int action, int mods)
+{
+	if(action == GLFW_PRESS)
+		flyEnabled = !flyEnabled;
+}
+
 DWORD WINAPI Main_Thread(void* hModule)
 {
 	// create console window if DEBUG_CONSOLE is defined
@@ -67,6 +79,9 @@ DWORD WINAPI Main_Thread(void* hModule)
 	Hook(reinterpret_cast<void*>(FUNC_PLAYER_KEYINPUT), reinterpret_cast<void*>(&Player_keyInput_H), reinterpret_cast<void**>(&Player_keyInput));
 
 	EnableHook(0);
+
+	KeyBinds::addBind("Toggle Fly", glfw::Keys::F, KeyBindsScope::PLAYER, toggleFlyCallback);
+
 	return true;
 }
 
