@@ -1,0 +1,3 @@
+[submodule "4dm.h"]
+	path = 4dm.h
+	url = https://github.com/4D-Modding/4dm.h
