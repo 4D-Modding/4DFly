@@ -1,0 +1,14 @@
+{
+  id: "tr1ngledev.4dfly",
+  name: "4D-Fly",
+  author: "Tr1NgleDev",
+  description: "Mod that allows you to fly. \nTo toggle fly mode press F (or whatever key you have binded if you have 4DKeyBinds)",
+  version: "1.1",
+  gameVersion: "0.2.1.4",
+  modDLL: "4DFly.dll",
+  externalDLLs: [
+  ],
+  dependencies: {
+    "tr1ngledev.4dkeybinds": "? before >= 1.1"
+  },
+}

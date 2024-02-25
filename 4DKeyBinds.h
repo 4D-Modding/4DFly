@@ -151,7 +151,7 @@ namespace KeyBinds
         if (!isLoaded())
             return;
         reinterpret_cast<void(__stdcall*)(const std::string&, int, int, BindCallback)>(GetProcAddress(fdm::getModHandle("tr1ngledev.4dkeybinds"), "addBind"))
-            (std::format("{}::{}", bindNamespace, bindName), (int)defaultKey, (int)scope, callback);
+            (std::format("{}:{}", bindNamespace, bindName), (int)defaultKey, (int)scope, callback);
     }
 
     inline void hookBind(const std::string& bindNamespace, const std::string& bindName, KeyBindsScope scope, BindCallback callback)
@@ -159,7 +159,7 @@ namespace KeyBinds
         if (!isLoaded())
             return;
         reinterpret_cast<void(__stdcall*)(const std::string&, KeyBindsScope, BindCallback)>(GetProcAddress(fdm::getModHandle("tr1ngledev.4dkeybinds"), "hookBind"))
-            (std::format("{}::{}", bindNamespace, bindName), scope, callback);
+            (std::format("{}:{}", bindNamespace, bindName), scope, callback);
     }
 
     inline void triggerBind(const std::string& bindNamespace, const std::string& bindName, KeyBindsScope scope, int action, int mods)
@@ -167,6 +167,6 @@ namespace KeyBinds
         if (!isLoaded())
             return;
         reinterpret_cast<void(__stdcall*)(const std::string&, KeyBindsScope, int, int)>(GetProcAddress(fdm::getModHandle("tr1ngledev.4dkeybinds"), "triggerBind"))
-            (std::format("{}::{}", bindNamespace, bindName), scope, action, mods);
+            (std::format("{}:{}", bindNamespace, bindName), scope, action, mods);
     }
 }
