@@ -1,5 +1,3 @@
-// its code is a bit outdated but who cares lol
-
 //#define DEBUG_CONSOLE
 
 #include <4dm.h>
