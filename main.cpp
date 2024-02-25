@@ -72,7 +72,7 @@ DWORD WINAPI Main_Thread(void* hModule)
 	FILE* fp;
 	freopen_s(&fp, "CONOUT$", "w", stdout);
 #endif
-
+	
 	// Hook to the Player::update function
 	Hook(reinterpret_cast<void*>(FUNC_PLAYER_UPDATEPOS), reinterpret_cast<void*>(&Player_updatePos_H), reinterpret_cast<void**>(&Player_updatePos));
 	// Hook to the Player::keyInput function to add F button
