@@ -39,6 +39,8 @@ float yVel = 0.0f;
 
 $hook(void, Player, update, World* world, double dt, EntityPlayer* entityPlayer)
 {
+	// check if `self` is the local player. if not then dont do any shit
+	if (self != &fdm::StateGame::instanceObj->player) return;
 	if (flyEnabled)
 	{
 		float yVelT = 0;
