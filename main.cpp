@@ -67,22 +67,22 @@ $hook(void, Player, updatePos, World* world, double dt)
 	original(self, world, dt);
 }
 
+void toggleFlyCallback(GLFWwindow* window, int action, int mods)
+{
+	if(action == GLFW_PRESS)
+		flyEnabled = !flyEnabled;
+}
+
 $hook(bool, Player, keyInput, GLFWwindow* window, World* world, int key, int scancode, int action, int mods)
 {
 	if(!KeyBinds::isLoaded()) // if no 4DKeyBinds mod
 	{
 		// Switch `flyEnabled` when F press
-		if (key == GLFW_KEY_F && action == GLFW_PRESS)
-			flyEnabled = !flyEnabled;
+		if (key == GLFW_KEY_F)
+			toggleFlyCallback(window, action, mods);
 	}
 	
 	return original(self, window, world, key, scancode, action, mods);
-}
-
-void toggleFlyCallback(GLFWwindow* window, int action, int mods)
-{
-	if(action == GLFW_PRESS)
-		flyEnabled = !flyEnabled;
 }
 
 $exec
